@@ -122,13 +122,27 @@ public class TaskDataAccess {
      * 
      * @param updateTask 更新するタスク
      */
-    // public void update(Task updateTask) {
-    // try () {
+    public void update(Task updateTask) {
+        List<Task> tasks = findAll();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Code,Name,Status,Rep_User_Code");
+            writer.newLine();
 
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
+            String line;
+            for (Task task : tasks) {
+                if (task.getCode() == updateTask.getCode()) {
+                    line = createLine(updateTask);
+                } else {
+                    line = createLine(task);
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * コードを基にタスクデータを削除します。
@@ -150,6 +164,6 @@ public class TaskDataAccess {
      * @return CSVに書き込むためのフォーマット文字列
      */
     private String createLine(Task task) {
-        return task.getCode() + "," + task.getName() + "," + task.getStatus() + "," + task.getRepUser();
+        return task.getCode() + "," + task.getName() + "," + task.getStatus() + "," + task.getRepUser().getCode();
     }
 }

@@ -176,23 +176,27 @@ public class TaskUI {
     public void selectSubMenu() {
         boolean flg = true;
         while (flg) {
-            System.out.println("以下１～２のメニューから好きな選択肢を選んでください");
-            System.out.println("1. タスクのステータス変更, 2. メインメニューに戻る");
-            System.out.print("選択肢：");
-            String selectMenu = reader.readLine();
-            System.out.println();
+            try {
+                System.out.println("以下１～２のメニューから好きな選択肢を選んでください");
+                System.out.println("1. タスクのステータス変更, 2. メインメニューに戻る");
+                System.out.print("選択肢：");
+                String selectMenu = reader.readLine();
+                System.out.println();
 
-            switch (selectMenu) {
-                case "1":
-                    inputChangeInformation();
-                    break;
-                case "2":
-                    System.out.println("メインメニューに戻ります");
-                    flg = false;
-                    break;
-                default:
-                    System.out.println("選択肢が誤っています。1~2のなかから選択してください。");
-                    break;
+                switch (selectMenu) {
+                    case "1":
+                        inputChangeInformation();
+                        break;
+                    case "2":
+                        System.out.println("メインメニューに戻ります");
+                        flg = false;
+                        break;
+                    default:
+                        System.out.println("選択肢が誤っています。1~2のなかから選択してください。");
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             System.out.println();
         }
@@ -226,17 +230,27 @@ public class TaskUI {
                 System.out.println("1. 着手中, 2. 完了");
                 System.out.print("選択肢：");
                 String status = reader.readLine();
+
                 if (!isNumeric(status)) {
                     System.out.println("ステータスは半角の数字で入力してください。");
                     System.out.println();
-                    if (!(status == 1 || status == 2)) {
-                        System.out.println("ステータスは1・2の中から選択してください。");
-                    }
+                    continue;
                 }
 
+                int statusCode = Integer.parseInt(status);
+                if (statusCode != 1 && statusCode != 2) {
+                    System.out.println("ステータスは1・2の中から選択してください。");
+                    continue;
+                }
+
+                taskLogic.changeStatus(taskCode, Integer.parseInt(status), loginUser);
+                flg = false;
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (AppException e) {
+                System.out.println(e.getMessage());
             }
+            System.out.println();
         }
     }
 
