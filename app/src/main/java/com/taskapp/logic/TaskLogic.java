@@ -108,14 +108,16 @@ public class TaskLogic {
             User loginUser) throws AppException {
 
         Task task2 = taskDataAccess.findByCode(code);
-
-        Task task = new Task(code, task2.getName(), status, loginUser);
-        Log log = new Log(code, loginUser.getCode(), status, LocalDate.now());
-
+        if (task2 == null) {
+            throw new AppException("存在するタスクコードを入力してください");
+        }
         int previousStatus = task2.getStatus();
         if (status != previousStatus + 1) {
             throw new AppException("ステータスは、前のステータスより1つ先のもののみを選択してください");
         }
+
+        Task task = new Task(code, task2.getName(), status, loginUser);
+        Log log = new Log(code, loginUser.getCode(), status, LocalDate.now());
 
         taskDataAccess.update(task);
         logDataAccess.save(log);

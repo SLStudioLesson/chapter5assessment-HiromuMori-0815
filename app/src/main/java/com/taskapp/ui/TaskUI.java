@@ -220,11 +220,6 @@ public class TaskUI {
                     continue;
                 }
                 int taskCode = Integer.parseInt(code);
-                TaskDataAccess taskDataAccess = new TaskDataAccess();
-                Task task = taskDataAccess.findByCode(taskCode);
-                if (task == null) {
-                    throw new AppException("存在するタスクコードを入力してください");
-                }
 
                 System.out.println("どのステータスに変更するか選択してください。");
                 System.out.println("1. 着手中, 2. 完了");
